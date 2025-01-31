@@ -8,6 +8,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import entidades.EntidadAlumno;
+import entidades.EntidadMatricula;
 
 public class Accesobd {
     private SessionFactory sf;
@@ -18,7 +19,7 @@ public class Accesobd {
     public Accesobd() {
         try {
             final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                    .configure() //
+                    .configure()
                     .build();
 
             
@@ -113,7 +114,7 @@ public class Accesobd {
         }
     }
     
-    public void actualizar(int id, String nombre, String apellido, String fecha) throws Exception {
+    public void actualizarAlumno(int id, String nombre, String apellido, String fecha) throws Exception {
         try {
             
             if (sesion == null || !sesion.isOpen()) {
@@ -126,15 +127,15 @@ public class Accesobd {
             }
 
             
-            EntidadAlumno persona = sesion.get(EntidadAlumno.class, id);
-            if (persona != null) {
+            EntidadAlumno alumno = sesion.get(EntidadAlumno.class, id);
+            if (alumno != null) {
                 
-                persona.setNombre(nombre);
-                persona.setApellido(apellido);
-                persona.setFechaNacimiento(apellido);
+            	alumno.setNombre(nombre);
+            	alumno.setApellido(apellido);
+            	alumno.setFechaNacimiento(apellido);
 
                
-                sesion.update(persona);
+                sesion.update(alumno);
 
                 
                 transaction.commit();
@@ -151,8 +152,84 @@ public class Accesobd {
     }
 
 
+    public void actualizarMatricula(int id, int idProfesorado,int idAlumnado, String asignatura, int curso) throws Exception {
+        try {
+            
+            if (sesion == null || !sesion.isOpen()) {
+                abrir();
+            }
+
+            
+            if (transaction == null || !transaction.isActive()) {
+                transaction = sesion.beginTransaction();
+            }
+
+            
+            EntidadMatricula matricula = sesion.get(EntidadMatricula.class, id);
+            if (matricula != null) {
+                
+            	matricula.setIdProfesorado(idProfesorado);
+            	matricula.setIdAlumnado(idAlumnado);
+            	matricula.setAsignatura(asignatura);
+            	matricula.setCurso(curso);
+
+               
+                sesion.update(matricula);
+
+                
+                transaction.commit();
+                System.out.println("Objeto actualizado exitosamente.");
+            } else {
+                System.out.println("No se encontró el objeto con ID: " + id);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al intentar actualizar el objeto: " + e.getMessage());
+            throw e; 
+        } finally {
+                        cerrar();
+        }
+    }
 
 
+    public void actualizarProfesor(int id, int idProfesorado,int idAlumnado, String asignatura, int curso) throws Exception {
+        try {
+            
+            if (sesion == null || !sesion.isOpen()) {
+                abrir();
+            }
+
+            
+            if (transaction == null || !transaction.isActive()) {
+                transaction = sesion.beginTransaction();
+            }
+
+            
+            EntidadMatricula matricula = sesion.get(EntidadMatricula.class, id);
+            if (matricula != null) {
+                
+            	matricula.setIdProfesorado(idProfesorado);
+            	matricula.setIdAlumnado(idAlumnado);
+            	matricula.setAsignatura(asignatura);
+            	matricula.setCurso(curso);
+
+               
+                sesion.update(matricula);
+
+                
+                transaction.commit();
+                System.out.println("Objeto actualizado exitosamente.");
+            } else {
+                System.out.println("No se encontró el objeto con ID: " + id);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al intentar actualizar el objeto: " + e.getMessage());
+            throw e; 
+        } finally {
+                        cerrar();
+        }
+    }
+    
+    
     public Object guardar(Object cosa) {
         if (sesion == null) {
             throw new IllegalStateException("La sesión no está abierta.");

@@ -2,7 +2,7 @@ package entidades;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 @Entity
 @Table(name = "Alumno")
 public class EntidadAlumno implements Serializable {
@@ -71,4 +71,8 @@ private int id;
     @OneToOne(cascade=CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private EntidadMatricula matricula;
+    
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinColumn(name="id")
+    private List<EntidadMatricula> listaMatriculass;
 }
