@@ -34,11 +34,11 @@ private int id;
 
     }
 
-    public int getIdAlumno() {
+    public int getIdProfesor() {
         return id;
     }
 
-    public void setIdAlumno(int id) {
+    public void setIdProfesor(int id) {
         this.id = id;
     }
 
