@@ -2,39 +2,41 @@ package entidades;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+
 @Entity
 @Table(name = "Matricula")
 public class EntidadMatricula implements Serializable {
-@Id
-@GeneratedValue(strategy= GenerationType.IDENTITY) //La opción más usada con MySQL
-@Column(name="id")
-private int id;
 
-@Column(name="idProfesorado")
-private int idProfesorado;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
 
-@Column(name="idAlumnado")
-private int idAlumnado;
+    @ManyToOne  // Relación con EntidadProfesor
+    @JoinColumn(name = "idProfesorado")
+    private EntidadProfesor profesorado;
 
-@Column(name = "Asignatura")
+    @ManyToOne  // Relación con EntidadAlumno
+    @JoinColumn(name = "idAlumnado")
+    private EntidadAlumno alumnado;
+
+    @Column(name = "asignatura")
     private String asignatura;
 
-@Column(name = "Curso")
+    @Column(name = "curso")
     private int curso;
 
-
-    public EntidadMatricula(int idProfesorado, int idAlumnado, String asignatura, int  curso) {
-        setIdProfesorado(idProfesorado);
-        setIdAlumnado(idAlumnado);
-        setAsignatura(asignatura);
-        setCurso(curso);
+    // Constructores
+    public EntidadMatricula(EntidadProfesor profesorado, EntidadAlumno alumnado, String asignatura, int curso) {
+        this.profesorado = profesorado;
+        this.alumnado = alumnado;
+        this.asignatura = asignatura;
+        this.curso = curso;
     }
 
-    public EntidadMatricula() {
+    public EntidadMatricula() {}
 
-    }
-
+    // Getters y setters
     public int getIdMatricula() {
         return id;
     }
@@ -43,22 +45,22 @@ private int idAlumnado;
         this.id = id;
     }
 
-    public int getIdProfesorado() {
-        return idProfesorado;
+    public EntidadProfesor getProfesorado() {
+        return profesorado;
     }
 
-    public void setIdProfesorado(int idProfesorado) {
-        this.idProfesorado = idProfesorado;
+    public void setProfesorado(EntidadProfesor profesorado) {
+        this.profesorado = profesorado;
     }
 
-    public int getIdAlumnado() {
-        return idAlumnado;
+    public EntidadAlumno getAlumnado() {
+        return alumnado;
     }
 
-    public void setIdAlumnado(int idAlumnado) {
-        this.idAlumnado = idAlumnado;
+    public void setAlumnado(EntidadAlumno alumnado) {
+        this.alumnado = alumnado;
     }
-    
+
     public String getAsignatura() {
         return asignatura;
     }
@@ -66,7 +68,7 @@ private int idAlumnado;
     public void setAsignatura(String asignatura) {
         this.asignatura = asignatura;
     }
-    
+
     public int getCurso() {
         return curso;
     }
@@ -74,14 +76,15 @@ private int idAlumnado;
     public void setCurso(int curso) {
         this.curso = curso;
     }
-    
+
     @Override
-    public String toString() 
-    {
-    	return "ID=>"+this.id+"| IdProfesorado=>"+this.idProfesorado+"| IdAlumnado=>"+this.idAlumnado+ "| Asignatura=>"+this.asignatura+ "| Curso=>"+this.curso;
+    public String toString() {
+        return "--------------------------------------\n" +
+               "📌 ID: " + this.id + "\n" +
+               "👨‍🏫 Profesorado: " + profesorado.getNombre() + "\n" +
+               "🎓 Alumnado: " + alumnado.getNombre() + "\n" +
+               "📖 Asignatura: " + this.asignatura + "\n" +
+               "📆 Curso: " + this.curso + "\n" +
+               "--------------------------------------";
     }
-    
-    @OneToOne(cascade=CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private EntidadAlumno alumno;
 }

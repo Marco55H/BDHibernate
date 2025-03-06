@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import accesobd.Accesobd;
 import entidades.EntidadAlumno;
@@ -24,15 +26,19 @@ public class Principal {
 
 			instancia = new Accesobd();
 
-			System.out.println("Bienvenido a la gestión de personas");
-			System.out.println("Empiece eligiendo una de las siguientes opciones");
+			System.out.println("=========================================");
+			System.out.println("      BIENVENIDO A LA GESTIÓN DE PERSONAS");
+			System.out.println("=========================================\n");
 			do {
-				System.out.println("1- Insertar Elemento");
-				System.out.println("2- Mostrar Elemento");
-				System.out.println("3- Editar Elemento");
-				System.out.println("4- Borrar Elemento");
-				System.out.println("5- Borrar Tabla");
-				System.out.println("0- Salir");
+			    System.out.println("Seleccione una opción:");
+			    System.out.println("  [1] Insertar Elemento");
+			    System.out.println("  [2] Mostrar Elemento");
+			    System.out.println("  [3] Editar Elemento");
+			    System.out.println("  [4] Borrar Elemento");
+			    System.out.println("  [5] Borrar Tabla");
+			    System.out.println("  [0] Salir");
+			    System.out.println("-----------------------------------------");
+			    System.out.print("Ingrese su opción: ");
 				opc = sc.nextInt();
 				sc.nextLine();
 
@@ -54,7 +60,9 @@ public class Principal {
 					break;
 				}
 			} while (opc != 0);
-
+			
+			System.out.println("\nSaliendo del sistema... ¡Hasta pronto! 👋");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -86,41 +94,65 @@ public class Principal {
 	
 	}
 
-	private static void borrarTablaMatricula() {
-		// TODO Auto-generated method stub
+	private static void borrarTablaMatricula() throws Exception {
+		String asegurar = "";
 		
-	}
+		System.out.println("¿Seguro que quiere borrar? (si, no)");
+		asegurar=sc.nextLine();
 
-	private static void borrarTablaProfesor() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static void borrarTablaAlumno() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static void opcion4() throws ClassNotFoundException, SQLException, Exception {
-	
-		System.out.println("Menú de Borrar");
-
-		int tabla = elegirTabla();
-		
-		switch (tabla) {
-		case 1:
-			borrarAlumno();
-			break;
-		case 2:
-			borrarProfesor();
-			break;
-		case 3:
-			borrarMatricula();
-			break;
+		if(asegurar.toLowerCase().equals("si")) {
+			instancia.abrir();
+			instancia.eliminarTabla("Matricula");
+			instancia.cerrar();
 		}
-	
+		}
+
+	private static void borrarTablaProfesor() throws Exception {
+		String asegurar = "";
+
+		System.out.println("¿Seguro que quiere borrar? (si, no)");
+		asegurar=sc.nextLine();
+
+		if(asegurar.toLowerCase().equals("si")) {
+			instancia.abrir();
+			instancia.eliminarTabla("Profesor");
+			instancia.cerrar();
+		}
+	}
+
+	private static void borrarTablaAlumno() throws Exception {
+		String asegurar = "";
+
+		System.out.println("¿Seguro que quiere borrar? (si, no)");
+		asegurar=sc.nextLine();
+
+		if(asegurar.toLowerCase().equals("si")) {
+			instancia.abrir();
+			instancia.eliminarTabla("Alumno");
+			instancia.cerrar();
+		}
 	}
 	
+	private static void opcion4() throws ClassNotFoundException, SQLException, Exception {
+	    System.out.println("Menú de Borrar");
+
+	    int tabla = elegirTabla();
+
+	    switch (tabla) {
+	        case 1:
+	            borrarAlumno();
+	            break;
+	        case 2:
+	            borrarProfesor();
+	            break;
+	        case 3:
+	            borrarMatricula();
+	            break;
+	        default:
+	            System.out.println("Opción no válida. Por favor, elija una opción correcta.");
+	    }
+	}
+		
 	private static void borrarAlumno() throws Exception {
 		
 		String asegurar = "";
@@ -141,6 +173,7 @@ public class Principal {
 		}
 		
 	}
+	
 	private static void borrarProfesor() throws Exception {
 		
 		String asegurar = "";
@@ -161,6 +194,7 @@ public class Principal {
 		}
 		
 	}
+	
 	private static void borrarMatricula() throws Exception {
 		
 		String asegurar = "";
@@ -205,8 +239,9 @@ public class Principal {
 		String modificar="";
 		String nombre ;
 		String apellido;
-		String FechaNacimiento;
-		int Antiguedad;
+		String fechaNacimiento;
+		int antiguedad;
+		boolean fechaValida=false;
 	    
 		List<EntidadProfesor> profesores;
 		EntidadProfesor profesor = null;
@@ -226,6 +261,11 @@ public class Principal {
 		    }
 		}
 		
+	    if (profesor == null) {
+	        System.out.println("No se encontró la matrícula con ID: " + idProfesor);
+	        return;
+	    }
+	    
 		//Nombre
 		System.out.println("¿Quiere modificar el nombre?(Si, No)");
 		modificar=sc.nextLine();
@@ -234,9 +274,7 @@ public class Principal {
 	    	
 	    	System.out.println("Cuál es el nuevo nombre del Profesor "+idProfesor);
 	    	nombre=sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
+	    		    	
 		}else {
 			nombre=profesor.getNombre();
 		}
@@ -250,9 +288,7 @@ public class Principal {
 	    	
 	    	System.out.println("Cuál es el nuevo apellido del Profesor "+idProfesor);
 	    	apellido=sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
+	    		    	
 		}else {
 			apellido=profesor.getNombre ();
 		}
@@ -261,23 +297,43 @@ public class Principal {
 		System.out.println("¿Quiere modificar la fecha de nacimiento?(Si, No)");
 		modificar=sc.nextLine();
 
-		if(modificar.toLowerCase().equals("Si".toLowerCase())) {
+		if(modificar.equalsIgnoreCase("Si")) {
 
 	    	
-	    	System.out.println("Cuál es la nueva fecha de nacimiento del Profesor "+idProfesor+"(Este formato) 1974-12-11");
-	    	FechaNacimiento = sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
+			System.out.println("Introduce la fecha de nacimiento del profesor (dd/MM/yyyy):");
+		    fechaNacimiento = sc.nextLine();
+		    
+		    while (!fechaValida) {
+		        if (validarFecha(fechaNacimiento)) {
+		            fechaValida = true;
+		        } else {
+		            System.out.println("Formato de fecha incorrecto. Usa el formato dd/MM/yyyy.");
+		            fechaNacimiento = sc.nextLine();
+		        }
+		    }
+	    		    	
 		}else {
-			FechaNacimiento=profesor.getFechaNacimiento();
+			fechaNacimiento=profesor.getFechaNacimiento();
+		}
+		//Antiguedad
+		System.out.println("¿Quiere modificar la antiguedad?(Si, No)");
+		modificar=sc.nextLine();
+
+		if(modificar.equalsIgnoreCase("Si")) {
+
+	    	
+	    	System.out.println("Cuál es la nueva antiguedad del Profesor "+idProfesor);
+	    	antiguedad = sc.nextInt();
+	    	sc.nextLine();
+	    		    	
+		}else {
+			antiguedad=profesor.getAntiguedad();
 		}
 		
-		
 		instancia.abrir();
-		instancia.actualizarAlumno(idProfesor, nombre, apellido, FechaNacimiento);
-		instancia.cerrar();
-		
+		System.out.println("Inetntando Editar Profesor");
+		instancia.actualizarProfesor(idProfesor, nombre, apellido, fechaNacimiento, antiguedad);
+		instancia.cerrar();		
 	}
 	
 	private static void editarAlumno() throws ClassNotFoundException, SQLException, Exception {
@@ -285,7 +341,8 @@ public class Principal {
 		String modificar="";
 		String nombre ;
 		String apellido;
-		String FechaNacimiento;
+		String fechaNacimiento;
+	    boolean fechaValida=false;
 	    
 		List<EntidadAlumno> alumnos;
 		EntidadAlumno alumno = null;
@@ -294,9 +351,11 @@ public class Principal {
 		idAlumno = sc.nextInt();
 		sc.nextLine();
 		
+		
 		instancia.abrir();
 		alumnos = instancia.leerAlumnos("id", idAlumno);
 		instancia.cerrar();
+		
 		
 		for (EntidadAlumno m : alumnos) {
 		    if (m.getIdAlumno() == idAlumno) {
@@ -305,6 +364,11 @@ public class Principal {
 		    }
 		}
 		
+	    if (alumno == null) {
+	        System.out.println("No se encontró el alumno con ID: " + idAlumno);
+	        return;
+	    }
+	    
 		//Nombre
 		System.out.println("¿Quiere modificar el nombre?(Si, No)");
 		modificar=sc.nextLine();
@@ -313,9 +377,7 @@ public class Principal {
 	    	
 	    	System.out.println("Cuál es el nuevo nombre del Alumno "+idAlumno);
 	    	nombre=sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
+	    		    	
 		}else {
 			nombre=alumno.getNombre();
 		}
@@ -329,9 +391,7 @@ public class Principal {
 	    	
 	    	System.out.println("Cuál es el nuevo apellido del Alumno "+idAlumno);
 	    	apellido=sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
+	    		    	
 		}else {
 			apellido=alumno.getNombre ();
 		}
@@ -340,124 +400,161 @@ public class Principal {
 		System.out.println("¿Quiere modificar la fecha de nacimiento?(Si, No)");
 		modificar=sc.nextLine();
 
-		if(modificar.toLowerCase().equals("Si".toLowerCase())) {
+		if(modificar.equalsIgnoreCase("Si")) {
 
 	    	
-	    	System.out.println("Cuál es la nueva fecha de nacimiento del Alumno "+idAlumno+"(Este formato) 1974-12-11");
-	    	FechaNacimiento = sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
+			System.out.println("Introduce la fecha de nacimiento del alumno (dd/MM/yyyy):");
+		    fechaNacimiento = sc.nextLine();
+		    
+		    while (!fechaValida) {
+		        if (validarFecha(fechaNacimiento)) {
+		            fechaValida = true;
+		        } else {
+		            System.out.println("Formato de fecha incorrecto. Usa el formato dd/MM/yyyy.");
+		            fechaNacimiento = sc.nextLine();
+		        }
+		    }
+	    		    	
 		}else {
-			FechaNacimiento=alumno.getFechaNacimiento();
+			fechaNacimiento=alumno.getFechaNacimiento();
 		}
 		
 		
 		instancia.abrir();
-		instancia.actualizarAlumno(idAlumno, nombre, apellido, FechaNacimiento);
+		System.out.println("Intentando Editar Alumno");
+		instancia.actualizarAlumno(idAlumno, nombre, apellido, fechaNacimiento);
 		instancia.cerrar();
 		
 	}
 
 	private static void editarMatricula() throws ClassNotFoundException, SQLException, Exception {
-		int idMatricula;
-		String modificar="";
-	    int idProfesorado ;
-	    int idAlumnado;
-	    int curso;
-	    String Asignatura="";
+	    int idMatricula;
+	    String modificar = "";
+	    int nuevoIdProfesorado = 0;
+	    int nuevoIdAlumnado = 0;
+	    int curso = 0;
+	    String Asignatura = "";
+
+	    List<EntidadMatricula> matriculas;
+	    EntidadMatricula matricula = null;
+
+	    System.out.println("\nInserte el ID de la Matricula que quiere modificar");
+	    idMatricula = sc.nextInt();
+	    sc.nextLine();  // Limpiar el buffer después de leer un número.
+
+	    // Abrir conexión y leer la matrícula
+	    instancia.abrir();
+	    matriculas = instancia.leerMatriculas("id", idMatricula);
+	    instancia.cerrar();
+
+	    // Buscar la matrícula correspondiente.
+	    for (EntidadMatricula m : matriculas) {
+	        if (m.getIdMatricula() == idMatricula) {
+	            matricula = m;
+	            break;
+	        }
+	    }
+
+	    if (matricula == null) {
+	        System.out.println("No se encontró la matrícula con ID: " + idMatricula);
+	        return;
+	    }
+
+	    // Cargar explícitamente la relación con el alumno si es necesario
+	    if (matricula.getAlumnado() == null) {
+	        System.out.println("No se pudo cargar el alumno asociado a la matrícula.");
+	        return;
+	    }
+
+	    // Obtener el ID del alumno y del profesor actual.
+	    nuevoIdAlumnado = matricula.getAlumnado().getIdAlumno();
+	    nuevoIdProfesorado = matricula.getProfesorado().getIdProfesor();
+
+	    // Modificar el idProfesorado si se desea.
+	    System.out.println("¿Quiere modificar el idProfesorado? (Si/No)");
+	    modificar = sc.nextLine();
+
+	    if (modificar.equalsIgnoreCase("Si")) {
+	        System.out.println("Cuál es el nuevo idProfesorado de la Matrícula " + matricula.getIdMatricula());
+
+	        if (sc.hasNextInt()) {
+	            nuevoIdProfesorado = sc.nextInt();
+	            sc.nextLine();  // Limpiar el buffer
+
+	            // Aquí deberías obtener el profesor desde la base de datos (si usas JPA).
+	            EntidadProfesor nuevoProfesor = new EntidadProfesor();
+	            nuevoProfesor.setIdProfesor(nuevoIdProfesorado);
+
+	            matricula.setProfesorado(nuevoProfesor);  // Asigna el nuevo profesor.
+	        } else {
+	            System.out.println("Error: Ingrese un número válido.");
+	            sc.nextLine(); // Limpiar el buffer en caso de error.
+	        }
+	    }
+
+	    // Modificar el idAlumnado si se desea.
+	    System.out.println("¿Quiere modificar el idAlumnado? (Si/No)");
+	    modificar = sc.nextLine();
+
+	    if (modificar.equalsIgnoreCase("Si")) {
+	        System.out.println("Cuál es el nuevo idAlumnado de la Matrícula " + matricula.getIdMatricula());
+
+	        if (sc.hasNextInt()) {
+	            nuevoIdAlumnado = sc.nextInt();
+	            sc.nextLine();  // Limpiar el buffer
+
+	            // Aquí deberías obtener el alumno desde la base de datos.
+	            EntidadAlumno nuevoAlumno = new EntidadAlumno();
+	            nuevoAlumno.setIdAlumno(nuevoIdAlumnado);
+
+	            matricula.setAlumnado(nuevoAlumno);  // Asigna el nuevo alumno.
+
+	        } else {
+	            System.out.println("Error: Ingrese un número válido.");
+	            sc.nextLine(); // Limpiar el buffer en caso de error.
+	        }
+	    }
+
+	    // Modificar el curso.
+	    System.out.println("¿Quiere modificar el curso? (Si/No)");
+	    modificar = sc.nextLine();
+
+	    if (modificar.equalsIgnoreCase("Si")) {
+	        System.out.println("Cuál es el nuevo curso de la Matrícula " + matricula.getIdMatricula());
+
+	        if (sc.hasNextInt()) {
+	            curso = sc.nextInt();
+	            sc.nextLine();  // Limpiar el buffer
+
+	        } else {
+	            System.out.println("Error: Ingrese un número válido.");
+	            sc.nextLine(); // Limpiar el buffer en caso de error.
+	        }
+	    } else {
+	        curso = matricula.getCurso();
+	    }
+
+	    // Modificar la asignatura.
+	    System.out.println("¿Quiere modificar la Asignatura? (Si/No)");
+	    modificar = sc.nextLine();
+
+	    if (modificar.equalsIgnoreCase("Si")) {
+	        System.out.println("Cuál es la nueva Asignatura de la Matrícula " + matricula.getIdMatricula());
+
+	        Asignatura = sc.nextLine();
+
+	    } else {
+	        Asignatura = matricula.getAsignatura();
+	    }
+
+	    // Realizar la actualización en la base de datos.
+	    instancia.abrir();
+	    System.out.println("Intentando actulizar matricula");
+	    instancia.actualizarMatricula(idMatricula, nuevoIdProfesorado, nuevoIdAlumnado, Asignatura, curso);
+	    instancia.cerrar();
 	    
-		List<EntidadMatricula> matriculas;
-		EntidadMatricula matricula = null;
-	    
-		System.out.println("Inserte el ID de la Matricula que quiere modificar");
-		idMatricula = sc.nextInt();
-		sc.nextLine();
-		
-		instancia.abrir();
-		matriculas = instancia.leerMatriculas("id", idMatricula);
-		instancia.cerrar();
-		
-		for (EntidadMatricula m : matriculas) {
-		    if (m.getIdMatricula() == idMatricula) {
-		    	matricula = m;
-		        break;
-		    }
-		}
-		
-		//Nombre
-		System.out.println("¿Quiere modificar el idProfesorado?(Si, No)");
-		modificar=sc.nextLine();
-
-		if(modificar.toLowerCase().equals("Si".toLowerCase())) {
-	    	
-	    	System.out.println("Cuál es el nuevo idProfesorado de la Matricula "+idMatricula);
-	    	idProfesorado=sc.nextInt();
-	    	sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
-		}else {
-			idProfesorado=matricula.getIdProfesorado();
-		}
-		
-		//Apellido
-		System.out.println("¿Quiere modificar el idAlumnado?(Si, No)");
-		modificar=sc.nextLine();
-
-		if(modificar.toLowerCase().equals("Si".toLowerCase())) {
-
-	    	
-	    	System.out.println("Cuál es el nuevo idAlumnado de la Matricula "+idMatricula);
-	    	idAlumnado=sc.nextInt();
-	    	sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
-		}else {
-			idAlumnado=matricula.getIdAlumnado();
-		}
-		
-		//fechanacimiento
-		System.out.println("¿Quiere modificar el curso?(Si, No)");
-		modificar=sc.nextLine();
-
-		if(modificar.toLowerCase().equals("Si".toLowerCase())) {
-
-	    	
-	    	System.out.println("Cuál es el nuevo curso de la Matricula "+idMatricula);
-	    	curso=sc.nextInt();
-	    	sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
-		}else {
-			curso=matricula.getCurso();
-		}
-		
-		
-		//antiguedad
-		System.out.println("¿Quiere modificar la Asignatura?(Si, No)");
-		modificar=sc.nextLine();
-
-		if(modificar.toLowerCase().equals("Si".toLowerCase())) {
-
-	    	
-	    	System.out.println("Cuál es  la nueva Asignatura de la Matricula "+idMatricula);
-	    	Asignatura=sc.nextLine();
-	    	
-			System.out.println("Editado correctamente");
-	    	
-		}else {
-			Asignatura=matricula.getAsignatura();
-		}
-		
-		instancia.abrir();
-		instancia.actualizarMatricula(idMatricula, idProfesorado, idAlumnado, Asignatura, curso);
-		instancia.cerrar();
-		
 	}
-
+	
 	private static void opcion2() throws Exception {
 		System.out.println("Menú de ver datos");
 		int tabla = elegirTabla();
@@ -511,7 +608,7 @@ public class Principal {
 		List<EntidadMatricula> matriculas;
 		
 		//Debo cambiar la entidad poner en minuscula para hacer lowercase aqui
-		System.out.println("Por que campo quieres buscar \n 1-id \n 2-idProfesorado \n 3-idAlumno \n 4-Asignatura \n 5-Curso");
+		System.out.println("\nPor que campo quieres buscar \n 1-id \n 2-idProfesorado \n 3-idAlumno \n 4-Asignatura \n 5-Curso \n 6-Ver todas Las Matriculas");
 		opc=sc.nextInt();
 		sc.nextLine();
 		
@@ -553,6 +650,11 @@ public class Principal {
 				matriculas = instancia.leerMatriculas(campo, valor);
 				instancia.cerrar();
 				break;
+			case 6:
+				instancia.abrir();
+				matriculas = instancia.leerTodasMatriculas();
+				instancia.cerrar();
+				break;
 			default:				
 				System.out.println("Campo no valido");	
 				matriculas=null;
@@ -571,6 +673,14 @@ public class Principal {
 		return valor;
 	}
 
+	private static boolean validarFecha(String fecha) {
+	    String regex = "^([0-2][0-9]|(3)[0-1])/(0[1-9]|1[0-2])/(\\d{4})$";
+	    Pattern pattern = Pattern.compile(regex);
+	    Matcher matcher = pattern.matcher(fecha);
+
+	    return matcher.matches();
+	}
+	
 	private static List<EntidadProfesor> filtraBusquedaProfesor() throws Exception {
 		int opc;
 		String campo="";
@@ -578,15 +688,13 @@ public class Principal {
 		List<EntidadProfesor> profesores=null;
 
 		//Debo cambiar la entidad poner en minuscula para hacer lowercase aqui
-		System.out.println("Por que campo quieres buscar \n 1-id \n 2-nombre \n 3-apellido \n 4-FechaNacimiento \n 5-antiguedad");
+		System.out.println("\nPor que campo quieres buscar \n 1-id \n 2-nombre \n 3-apellido \n 4-FechaNacimiento \n 5-antiguedad \n 6-Todo los Profesores");
 		opc=sc.nextInt();
 		sc.nextLine();
 		
-		System.out.println("Que valor tiene el campo "+campo);
-
 		switch(opc){
 			case 1:
-				System.out.println("Que valor tiene el campo "+campo);
+				System.out.println("\nQue valor tiene el campo "+campo);
 				campo="id";
 	            valor = pasarInt(campo); 
 				instancia.abrir();
@@ -594,7 +702,7 @@ public class Principal {
 				instancia.cerrar();
 				break;
 			case 5:
-				System.out.println("Que valor tiene el campo "+campo);
+				System.out.println("\nQue valor tiene el campo "+campo);
 				campo="antiguedad";
 		            valor = pasarInt(campo); 
 					instancia.abrir();
@@ -615,7 +723,7 @@ public class Principal {
 				break;
 			case 2:	
 				campo="nombre";
-				System.out.println("Que valor tiene el campo "+campo);
+				System.out.println("\nQue valor tiene el campo "+campo);
 				valor=sc.nextLine();
 				instancia.abrir();
 				profesores = instancia.leerProfesores(campo, valor);
@@ -623,10 +731,15 @@ public class Principal {
 				break;
 			case 3:	
 				campo="apellido";
-				System.out.println("Que valor tiene el campo "+campo);
+				System.out.println("\nQue valor tiene el campo "+campo);
 				valor=sc.nextLine();
 				instancia.abrir();
 				profesores = instancia.leerProfesores(campo, valor);
+				instancia.cerrar();
+				break;
+			case 6:
+				instancia.abrir();
+				profesores = instancia.leerTodosProfesores();
 				instancia.cerrar();
 				break;
 			default:
@@ -645,7 +758,7 @@ public class Principal {
 		List<EntidadAlumno> alumnos=null;
 		
 		//Debo cambiar la entidad poner en minuscula para hacer lowercase aqui
-		System.out.println("Por que campo quieres buscar \n 1-id \n 2-nombre \n 3-apellido \n 4-FechaNacimiento");
+		System.out.println(" \n Por que campo quieres buscar (%LIKE%) \n 1-id \n 2-nombre \n 3-apellido \n 4-FechaNacimiento \n 5-Ver todos Los Alumnos");
 		opc=sc.nextInt();
 		sc.nextLine();
 		
@@ -653,7 +766,7 @@ public class Principal {
 		switch(opc){
 		case 1:
 			campo="id";
-			System.out.println("Que valor tiene el campo "+campo);
+			System.out.println("\nQue valor tiene el campo "+campo);
             valor = pasarInt(campo); 
     		instancia.abrir();
     		alumnos = instancia.leerAlumnos(campo, valor);
@@ -662,7 +775,7 @@ public class Principal {
 		
 		case 4:
 			campo = "FechaNacimiento";
-			System.out.println("Que valor tiene el campo "+campo);
+			System.out.println("\nQue valor tiene el campo "+campo);
 			try {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		    	valor = sdf.parse((String) valor);
@@ -679,7 +792,7 @@ public class Principal {
 		
 		case 2:	
 			campo="nombre";
-			System.out.println("Que valor tiene el campo "+campo);
+			System.out.println("\nQue valor tiene el campo "+campo);
 			valor=sc.nextLine();
 			instancia.abrir();
 			alumnos = instancia.leerAlumnos(campo, valor);
@@ -688,13 +801,18 @@ public class Principal {
 		
 		case 3:	
 			campo="apellido";
-			System.out.println("Que valor tiene el campo "+campo);
+			System.out.println("\nQue valor tiene el campo "+campo);
 			valor=sc.nextLine();
 			instancia.abrir();
 			alumnos = instancia.leerAlumnos(campo, valor);
 			instancia.cerrar();
 		break;
-		
+		case 5:
+			instancia.abrir();
+			alumnos = instancia.leerTodosAlumnos();
+			instancia.cerrar();
+			
+		break;
 		default:
 			System.out.println("Campo no valido");									
 		}
@@ -742,42 +860,69 @@ public class Principal {
 
 	}
 	
-	private static EntidadMatricula crearMatricula() {
-		int idAlumno;
-		int idProfesor;
-		String asignatura;
-		int curso;
+	private static EntidadMatricula crearMatricula() throws Exception {
+	    int idAlumno;
+	    int idProfesor;
+	    String asignatura;
+	    int curso;
 
-		System.out.println("Intoduzca el id del Alumno correspondiente");
-		idAlumno = sc.nextInt();
-		sc.nextLine();
-		System.out.println("Intoduzca el id del Profesor correspondiente");
-		idProfesor = sc.nextInt();
-		sc.nextLine();
-		System.out.println("Intoduzca la asignatura de la matricula");
-		asignatura = sc.nextLine();
-		System.out.println("Introduce el curso de la matricula");
-		curso = sc.nextInt();
-		sc.nextLine();
+	    System.out.println("Id del Alumno correspondiente");
+	    idAlumno = sc.nextInt();
+	    sc.nextLine();  // Limpiar el buffer
+	    System.out.println("Id del Profesor correspondiente");
+	    idProfesor = sc.nextInt();
+	    sc.nextLine();  // Limpiar el buffer
+	    System.out.println("Asignatura de la matrícula");
+	    asignatura = sc.nextLine();
+	    System.out.println("Curso de la matrícula");
+	    curso = sc.nextInt();
+	    sc.nextLine();  // Limpiar el buffer
+	    
+	    EntidadAlumno alumno = instancia.obtenerAlumnoPorId(idAlumno);  // Método que consulta la BD para obtener el alumno
+	    if (alumno == null) {
+	        System.out.println("No se encontró el alumno con id " + idAlumno);
+	        return null;
+	    }
 
-		EntidadMatricula matricula = new EntidadMatricula(idAlumno, idProfesor, asignatura, curso);
+	    EntidadProfesor profesor = instancia.obtenerProfesorPorId(idProfesor);  // Método que consulta la BD para obtener el profesor
+	    if (profesor == null) {
+	        System.out.println("No se encontró el profesor con id " + idProfesor);
+	        return null;
+	    }
 
-		return matricula;
+	    // Ahora puedes crear la matrícula
+	    EntidadMatricula matricula = new EntidadMatricula(profesor, alumno, asignatura, curso);
+
+	    return matricula;
 	}
+
 	
 	private static EntidadProfesor crearProfesor() {
 		String nombre;
 		String apellido;
-		String fechaNacimiento;
+		String fechaNacimiento="";
 		int antiguedad;
-
-		System.out.println("Intoduzca el nombre del profesor");
+		boolean fechaValida = false;
+		
+		System.out.println("Nombre del profesor : ");
 		nombre = sc.nextLine();
-		System.out.println("Intoduzca el apellido del profesor");
+		
+		System.out.println("Apellido del profesor : ");
 		apellido = sc.nextLine();
-		System.out.println("Intoduzca la fecha de nacimiento del profesor (dd/mm/AAAA)");
-		fechaNacimiento = sc.nextLine();
-		System.out.println("Introduce la antiguedad del profesor");
+		
+	    System.out.println("Fecha de nacimiento del profesor (dd/MM/yyyy) : ");
+	    fechaNacimiento = sc.nextLine();
+	    
+	    while (!fechaValida) {
+	        if (validarFecha(fechaNacimiento)) {
+	            fechaValida = true;
+	        } else {
+	            System.out.println("Formato de fecha incorrecto. Usa el formato dd/MM/yyyy.");
+	            fechaNacimiento = sc.nextLine();
+	        }
+	    }
+	    
+		System.out.println("Antiguedad del profesor");
 		antiguedad = sc.nextInt();
 		sc.nextLine();
 
@@ -790,14 +935,23 @@ public class Principal {
 		String nombre;
 		String apellido;
 		String fechaNacimiento;
-
-		System.out.println("Intoduzca el nombre del alumno");
+		boolean fechaValida=false;
+		
+		System.out.println("Nombre del alumno : ");
 		nombre=sc.nextLine();
-		System.out.println("Intoduzca el apellido del alumno");
+		System.out.println("Apellido del alumno : ");
 		apellido = sc.nextLine();
-		System.out.println("Intoduzca la fecha de nacimiento del alumno (dd/mm/AAAA)");
-		fechaNacimiento = sc.nextLine();
-
+	    System.out.println("Fecha de nacimiento del alumno (dd/MM/yyyy) : ");
+	    fechaNacimiento = sc.nextLine();
+	    
+	    while (!fechaValida) {
+	        if (validarFecha(fechaNacimiento)) {
+	            fechaValida = true;
+	        } else {
+	            System.out.println("Formato de fecha incorrecto. Usa el formato dd/MM/yyyy.");
+	            fechaNacimiento = sc.nextLine();
+	        }
+	    }
 		EntidadAlumno alumno = new EntidadAlumno(nombre, apellido, fechaNacimiento);
 
 		return alumno;
@@ -806,15 +960,26 @@ public class Principal {
 	private static int elegirTabla() {
 		int eleccion;
 
-		System.out.println("¿Sobre que tabla quiere trabajar?");
+		System.out.println("=====================================================");
+		System.out.println("      SELECCIÓN DE TABLA CON LA QUE TRABAJAR");
+		System.out.println("=====================================================\n");
 
 		do {
-			System.out.println("1- Alumno");
-			System.out.println("2- Profesor");
-			System.out.println("3- Matricula");
+		    System.out.println("¿Sobre qué tabla desea trabajar?\n");
+		    System.out.println("  [1] Alumno      👦");
+		    System.out.println("  [2] Profesor    👨‍🏫");
+		    System.out.println("  [3] Matrícula   🗃️");
+		    System.out.println("  [0] Salir       🛫");
+		    System.out.println("-----------------------------------------");
+		    System.out.print("Ingrese su elección: ");
 			eleccion = sc.nextInt();
 			sc.nextLine();
-		} while (eleccion < 1 || eleccion > 3);
+			
+			if(eleccion < 0 || eleccion > 3) {
+				System.out.println("No es valida esa opcion ❌");
+			}
+			
+		} while (eleccion < 0 || eleccion > 3);
 
 		return eleccion;
 	}

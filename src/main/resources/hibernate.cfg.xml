@@ -2,6 +2,8 @@
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
+
+
     <session-factory>
         <!-- Configuración de la conexión JDBC -->
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
@@ -13,7 +15,15 @@
         <!--Seleccionamos el dialecto SQL-->
         <property name="dialect">org.hibernate.dialect.MariaDBDialect</property>
         <!-- Configurar SQL para salida estándar -->
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
+        <!-- Que no salgan mensajes-->
+        <property name="hibernate.use_sql_comments">false</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        
+        <!-- Deshabilitar logs de Hibernate -->
+        <property name="hibernate.generate_statistics">false</property>
+        
         <!-- Establece el contexto de la sesion-->
         <property name="current_session_context_class">thread</property>
         <property name="hbm2ddl.auto">update</property>

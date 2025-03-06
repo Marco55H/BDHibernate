@@ -2,38 +2,38 @@ package entidades;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
 @Entity
 @Table(name = "Profesor")
 public class EntidadProfesor implements Serializable {
-@Id
-@GeneratedValue(strategy= GenerationType.IDENTITY) //La opción más usada con MySQL
-@Column(name="id")
-private int id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY) //La opción más usada con MySQL
+    @Column(name="id")
+    private int id;
 
-@Column(name = "nombre")
+    @Column(name = "nombre")
     private String nombre;
 
-@Column(name = "apellido")
+    @Column(name = "apellido")
     private String apellido;
 
-@Column(name = "FechaNacimiento")
-	private String FechaNacimiento;
+    @Column(name = "fechaNacimiento")  // Convención snake_case para BD
+    private String fechaNacimiento;      // Cambio a camelCase en Java
 
-@Column(name = "antiguedad")
-	private int antiguedad;
+    @Column(name = "antiguedad")
+    private int antiguedad;
 
-
-    public EntidadProfesor(String nombre, String apellido, String  FechaNacimiento, int antiguedad) {
-        setNombre(nombre);
-        setApellido(apellido);
-        setFechaNacimiento(FechaNacimiento);
-        setAntiguedad(antiguedad);
+    // Constructores
+    public EntidadProfesor(String nombre, String apellido, String fechaNacimiento, int antiguedad) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fechaNacimiento = fechaNacimiento;
+        this.antiguedad = antiguedad;
     }
 
-    public EntidadProfesor() {
+    public EntidadProfesor() {}
 
-    }
-
+    // Getters y Setters
     public int getIdProfesor() {
         return id;
     }
@@ -57,15 +57,15 @@ private int id;
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-    
-    public String getFechaNacimiento() {
-        return apellido;
+
+    public String getFechaNacimiento() {  // Corrección del getter
+        return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(String FechaNacimiento) {
-        this.FechaNacimiento = FechaNacimiento;
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
-    
+
     public int getAntiguedad() {
         return antiguedad;
     }
@@ -74,16 +74,26 @@ private int id;
         this.antiguedad = antiguedad;
     }
 
-    
     @Override
-    public String toString() 
-    {
-    	return "ID=>"+this.id+"| Nombre=>"+this.nombre+"| Apellido=>"+this.apellido+ "| Fecha nacimiento=>"+this.FechaNacimiento+ "| Antiguedad=>"+this.antiguedad;
+    public String toString() {
+        return "--------------------------------------\n" +
+               "📌 ID: " + this.id + "\n" +
+               "👤 Nombre: " + this.nombre + " " + this.apellido + "\n" +
+               "📅 Fecha de nacimiento: " + this.fechaNacimiento + "\n" +
+               "⏳ Antigüedad: " + this.antiguedad + " años\n" +
+               "--------------------------------------";
     }
-    
-    
-    
-    @OneToOne(cascade=CascadeType.ALL)
+
+    // Relación con EntidadMatricula
+    @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private EntidadMatricula matricula;
+
+    public EntidadMatricula getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(EntidadMatricula matricula) {
+        this.matricula = matricula;
+    }
 }
